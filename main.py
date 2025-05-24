@@ -21,7 +21,7 @@ def main():
         clock.tick(TICK_RATE)
         fps = clock.get_fps()
         moves = disk.Disk.moves
-        pygame.display.set_caption(f"Tower of Hanoi - FPS: {fps:.2f}, Moves:{moves}")
+        pygame.display.set_caption(f"Tower of Hanoi - R to reset, Q to quit -  Moves:{moves}")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -31,6 +31,12 @@ def main():
 
                 if event.key == pygame.K_q:
                     running = False
+
+                if event.key == pygame.K_r:
+                    diskManager.reset()
+
+                if event.key == pygame.K_w:
+                    diskManager.win()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = event.pos
@@ -51,8 +57,9 @@ def draw():
     rods.draw(surface)
     diskManager.draw(surface)
     pygame.display.flip()
-
-
+    if diskManager.game_won:
+        pygame.time.delay(5000)
+        diskManager.reset()
 
 def update():
     diskManager.update(rods.rods)
