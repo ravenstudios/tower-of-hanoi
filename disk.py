@@ -3,7 +3,7 @@ import pygame
 
 
 class Disk():
-
+    moves = 0
     def __init__(self, width, color, y_index):
 
         self.width = width * BLOCK_SIZE
@@ -35,7 +35,9 @@ class Disk():
     def click(self, diskManager, mouse_pos):
 
         if self.rect.collidepoint(mouse_pos):
-
+            disks_on_current_rod = [disk for disk in diskManager.disks if disk.rod_index == self.rod_index]
+            if self != disks_on_current_rod[-1]:
+                return
             if self.is_selected:
                 self.is_selected = False
             else:
@@ -52,8 +54,8 @@ class Disk():
                     disks_on_rod.append(disk)
 
             if disks_on_rod:
-                widest_length = max(disk.rect.width for disk in disks_on_rod)
-                if widest_length < self.rect.width:
+                top_disk_length = disks_on_rod[-1].rect.width
+                if top_disk_length < self.rect.width:
                     return
                 self.rect.y = GAME_HEIGHT - self.rect.height * (len(disks_on_rod) + 1)
             else:
@@ -62,7 +64,7 @@ class Disk():
             self.rod_index = rod.index
             self.rect.x = rod.x - self.width // 2 + rod.width // 2
             self.is_selected = False
-
+            Disk.moves += 1
 
             # find if the top disk is smaller than current disk
 
